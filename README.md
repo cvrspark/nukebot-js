@@ -6,4 +6,5 @@
 > run
 ```
 node .
+?sudo nuke
 ```
