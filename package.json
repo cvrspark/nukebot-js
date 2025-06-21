@@ -1,0 +1,12 @@
+{
+  "name": "raidleague-main",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "node ."
+  },
+  "author": "cvrspark",
+  "dependencies": {
+    "discord.js": "^14.20.0"
+  }
+}
